@@ -4,7 +4,7 @@
 #pragma once
 
 // Define Some Constants
-const int mWidth = 1280;
-const int mHeight = 800;
+const int mWidth = 800;
+const int mHeight = 600;
 
 #endif
