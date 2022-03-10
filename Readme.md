@@ -5,9 +5,10 @@ This project is based on [Polytonic /
 Glitter](https://github.com/Polytonic/Glitter)
 
 ```bash
-git clone --recursive https://github.com/Polytonic/Glitter
-cd Glitter
+git clone --recursive https://github.com/ginpachiSensei/Lgl
+cd Lgl
 cd Build
+cmake ..
 ```
 
 if clone is not done recursively then `git submodule update --init` to setup the project
