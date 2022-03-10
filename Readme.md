@@ -7,6 +7,7 @@ Glitter](https://github.com/Polytonic/Glitter)
 ```bash
 git clone --recursive https://github.com/ginpachiSensei/Lgl
 cd Lgl
+mkdir build
 cd Build
 cmake ..
 ```
