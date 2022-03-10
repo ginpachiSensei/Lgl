@@ -1,38 +1,48 @@
+#include "lgl.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-int main(void)
+// Standard Headers
+#include <cstdio>
+#include <cstdlib>
+
+int main(int argc, char *argv[])
 {
-    GLFWwindow *window;
+    // Load GLFW and Create a Window
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    auto mWindow = glfwCreateWindow(mWidth, mHeight, "OpenGL", nullptr, nullptr);
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
+    // Check for Valid Context
+    if (mWindow == nullptr)
     {
-        glfwTerminate();
-        return -1;
+        fprintf(stderr, "Failed to Create OpenGL Context");
+        return EXIT_FAILURE;
     }
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    // Create Context and Load OpenGL Functions
+    glfwMakeContextCurrent(mWindow);
+    gladLoadGL();
+    fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    // Rendering Loop
+    while (glfwWindowShouldClose(mWindow) == false)
     {
-        /* Render here */
+        if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(mWindow, true);
+
+        // Background Fill Color
+        glClearColor(0.50f, 0.25f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
-        /* Poll for and process events */
+        // Flip Buffers and Draw
+        glfwSwapBuffers(mWindow);
         glfwPollEvents();
     }
-
     glfwTerminate();
-    return 0;
+    return EXIT_SUCCESS;
 }
