@@ -60,6 +60,14 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // triangle using legacy opengl
+        glBegin(GL_TRIANGLES);
+        glColor3f(0.1, 0.2, 0.3);
+        glVertex3f(0, 0, 0);
+        glVertex3f(1, 0, 0);
+        glVertex3f(0, 1, 0);
+        glEnd();
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(mWindow);
