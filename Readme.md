@@ -3,6 +3,8 @@
 This project is to learn OpenGL.<br>
 This project is based on [Polytonic /
 Glitter](https://github.com/Polytonic/Glitter)
+And [ JoeyDeVries /
+LearnOpenGL](https://github.com/JoeyDeVries/LearnOpenGL)
 
 ```bash
 git clone --recursive https://github.com/ginpachiSensei/Lgl
