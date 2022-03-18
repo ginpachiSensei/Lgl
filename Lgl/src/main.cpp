@@ -149,18 +149,12 @@ int main()
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
-<<<<<<< HEAD
-<<<<<<< HEAD
         glDrawArrays(GL_TRIANGLES, 0, 3);
         // draw our first triangle
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawArrays(GL_TRIANGLES, 0, 3);
         // glBindVertexArray(0); // no need to unbind it every time
-=======
-=======
->>>>>>> 7335f347187b84675f95601930bfcc272bd768ec
         // triangle using legacy opengl
         glBegin(GL_TRIANGLES);
         glColor3f(0.1, 0.2, 0.3);
@@ -168,11 +162,6 @@ int main()
         glVertex3f(1, 0, 0);
         glVertex3f(0, 1, 0);
         glEnd();
-<<<<<<< HEAD
->>>>>>> 7335f347187b84675f95601930bfcc272bd768ec
-=======
->>>>>>> 7335f347187b84675f95601930bfcc272bd768ec
-
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(mWindow);
