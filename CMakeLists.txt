@@ -18,10 +18,11 @@ endif()
 
 include_directories(Lgl/Headers/
                     Lgl/Vendor/glad/include/
-                    Lgl/Vendor/glfw/include/)
+                    Lgl/Vendor/glfw/include/
+                    Lgl/Vendor/glm/)
 
 file(GLOB VENDORS_SOURCES Lgl/Vendor/glad/src/glad.c)
-file(GLOB PROJECT_HEADERS Lgl/Headers/*.hpp)
+file(GLOB PROJECT_HEADERS Lgl/src/*.hpp)
 file(GLOB PROJECT_SOURCES Lgl/src/*.cpp)
 file(GLOB PROJECT_SHADERS Lgl/Shaders/*.comp
                           Lgl/Shaders/*.frag
