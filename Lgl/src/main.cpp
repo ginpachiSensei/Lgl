@@ -121,6 +121,7 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(mWindow);
+    glfwSwapInterval(1);
     glfwSetFramebufferSizeCallback(mWindow, framebuffer_size_callback);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -175,6 +176,12 @@ int main()
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    shader.activate();
+    int FragmentColorlocation = glGetUniformLocation(shader.get(), "u_Color");
+    // glUniform4f(FragmentColorlocation, 0.8f, 0.3f, 0.8f, 1.0f);
+
+    float r = 0.0f;
+    float increment = 0.05f;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(mWindow))
@@ -187,14 +194,16 @@ int main()
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        shader.activate();
-        double timeValue = glfwGetTime();
-        float greenValue = static_cast<float>(sin(timeValue) / 2.0 + 0.5);
-        int FragmentColorlocation = glGetUniformLocation(shader.get(), "u_Color");
-        glUniform4f(FragmentColorlocation, 0.0f, greenValue, 0.0f, 1.0f);
 
         glBindVertexArray(VAO);
+        glUniform4f(FragmentColorlocation, r, 0.3f, 0.8f, 1.0f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        if (r > 1.0f)
+            increment = -0.05f;
+        else if (r < 0.0f)
+            increment = 0.05f;
+
+        r += increment;
         glBindVertexArray(0); // no need to unbind it every time
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
