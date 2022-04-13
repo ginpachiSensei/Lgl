@@ -1,5 +1,5 @@
 // Local Headers
-#include "shader.hpp"
+#include "shader.h"
 
 // Standard Headers
 #include <cassert>
