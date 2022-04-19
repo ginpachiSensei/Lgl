@@ -1,7 +1,9 @@
 #include "lgl.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "shader.h"
+#include "Shader.h"
+#include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
@@ -157,14 +159,15 @@ int main()
         1, 2, 3  // second Triangle
     };
 
-    unsigned int VBO, VAO, IBO;
+    unsigned int VAO, IBO;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    // glGenBuffers(1, &VBO);
+    Mirage::VertexBuffer VBO(vertices, sizeof(vertices));
     glGenBuffers(1, &IBO);
     glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -210,10 +213,10 @@ int main()
     }
 
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    // glDeleteBuffers(1, &VBO);
+    VBO.~VertexBuffer();
     glDeleteBuffers(1, &IBO);
     shader.~Shader();
-
     glfwTerminate();
     return 0;
 }
