@@ -1,0 +1,6 @@
+1.  window context
+2.  craete window with window pointer
+3.  create the window the current context for opengl
+4.  load glad library
+5.  declare the main loop to run unitl glfwWindowShouldClose
+6.  
