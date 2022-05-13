@@ -1,5 +1,5 @@
 // Local Headers
-#include "shader.hpp"
+#include "shader.h"
 
 // Standard Headers
 #include <cassert>
@@ -17,9 +17,18 @@ namespace Mirage
     }
 
     void Shader::bind(unsigned int location, float value) { glUniform1f(location, value); }
+    void Shader::bind(unsigned int location, glm::vec4 const &value)
+    {
+        glUniform4f(location, value.x, value.y, value.z, value.w);
+    }
     void Shader::bind(unsigned int location, glm::mat4 const &matrix)
     {
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
+    int Shader::getUniLoc(std::string const &name)
+    {
+        return glGetUniformLocation(mProgram, name.c_str());
     }
 
     Shader &Shader::attach(std::string const &filename)
