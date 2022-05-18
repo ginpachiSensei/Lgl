@@ -1,8 +1,9 @@
 #include "lgl.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+// #define STB_IMAGE_IMPLEMENTATION
+// #include "stb_image.h"
+#include "Texture2D.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -113,31 +114,9 @@ int main()
 
     // load and create a texture
     // -------------------------
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    int width, height, nrChannels;
     std::string file = "res/wall.jpg";
-    // const char *filePath = file.c_str();
-    unsigned char *data = stbi_load(file.c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-
+    Texture2D texture1(file.c_str());
+    texture1.Bind();
     // main loop
     while (!glfwWindowShouldClose(mWindow))
     {
@@ -148,21 +127,18 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // glBindTexture(GL_TEXTURE_2D, texture);
-
         // binding vertex array VAO
         glBindVertexArray(VAO);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
         // draw call
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
     }
 
     shader.~Shader();
+    texture1.~Texture2D();
     VBO.~VertexBuffer();
     IBO.~IndexBuffer();
     glfwTerminate();
