@@ -5,6 +5,8 @@
 // #include "stb_image.h"
 #include "Texture2D.h"
 #include "Shader.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "glError.h"
@@ -95,22 +97,15 @@ int main()
     shader.activate();
 
     // vertex array object
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    Mirage::VertexBufferLayout layout;
+    layout.push<float>(3);
+    layout.push<float>(3);
+    layout.push<float>(2);
+    Mirage::VertexArray VAO;
+    VAO.AddBuffer(VBO, layout);
 
     Mirage::IndexBuffer IBO(indices, 6);
-    // IBO.Bind();
-
-    // vertex attribute object
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    IBO.Bind();
 
     // load and create a texture
     // -------------------------
@@ -132,7 +127,7 @@ int main()
         transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
         shader.bind("transform", transform);
         // binding vertex array VAO
-        glBindVertexArray(VAO);
+        VAO.Bind();
 
         // draw call
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -145,6 +140,8 @@ int main()
     texture1.~Texture2D();
     VBO.~VertexBuffer();
     IBO.~IndexBuffer();
+    layout.~VertexBufferLayout();
+    VAO.~VertexArray();
     glfwTerminate();
     return 0;
 }
