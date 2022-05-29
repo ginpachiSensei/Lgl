@@ -1,11 +1,11 @@
 #include "lgl.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-// #define STB_IMAGE_IMPLEMENTATION
-// #include "stb_image.h"
 #include "Texture2D.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
+#include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "glError.h"
 #include <iostream>
@@ -72,51 +72,33 @@ int main()
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     float vertices[] = {
-        // positions(first 3)          // colors(next 3)           // texture coords(last 2)
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
-    };
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5f, 0.0f};
 
     unsigned int indices[] = {
-        // note that we start from 0!
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-    };
+        0, 1, 2};
 
-    // vertex buffer object
     Mirage::VertexBuffer VBO(vertices, sizeof(vertices));
+    VBO.Bind();
 
-    // shader object
+    Mirage::VertexBufferLayout layout;
+    layout.push<float>(3);
+    VertexArray VAO;
+    VAO.AddBuffer(VBO, layout);
+
+    Mirage::IndexBuffer IBO(indices, 3);
+    IBO.Bind();
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    // shader
     Mirage::Shader shader;
     shader.attach("main.frag").attach("main.vert");
     shader.link();
     shader.activate();
 
-    // vertex array object
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    Mirage::IndexBuffer IBO(indices, 6);
-    // IBO.Bind();
-
-    // vertex attribute object
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    // load and create a texture
-    // -------------------------
-    std::string file = "res/wall.jpg";
-    Texture2D texture1(file.c_str());
-    texture1.Bind();
     // main loop
     while (!glfwWindowShouldClose(mWindow))
     {
@@ -127,24 +109,20 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        shader.bind("transform", transform);
-        // binding vertex array VAO
-        glBindVertexArray(VAO);
+        VAO.Bind();
 
-        // draw call
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glBindVertexArray(0);
 
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
     }
 
-    shader.~Shader();
-    texture1.~Texture2D();
+    VAO.~VertexArray();
     VBO.~VertexBuffer();
     IBO.~IndexBuffer();
+    shader.~Shader();
     glfwTerminate();
     return 0;
 }

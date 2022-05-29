@@ -4,6 +4,12 @@
 // GLAD
 #include <glad/glad.h>
 
+template <typename T>
+struct identity
+{
+    typedef T type;
+};
+
 struct VertexBufferLayoutElement
 {
     unsigned int type;
@@ -24,41 +30,43 @@ struct VertexBufferLayoutElement
         return 0;
     }
 };
-
-class VertexBufferLayout
+namespace Mirage
 {
-private:
-    std::vector<VertexBufferLayoutElement> m_Elements;
-    unsigned int m_stride;
-
-public:
-    VertexBufferLayout()
-        : m_stride(0) {}
-
-    template <typename T>
-    void Push(unsigned int count) {}
-
-    // template <typename T>
-    void Push<float>(unsigned int count)
+    class VertexBufferLayout
     {
-        m_Elements.push_back({GL_FLOAT, count, GL_FALSE});
-        m_stride += VertexBufferLayoutElement::GetSizeOfType(GL_FLOAT) * count;
-    }
+    private:
+        std::vector<VertexBufferLayoutElement> m_Elements;
+        unsigned int m_stride;
 
-    // template <typename T>
-    void Push<unsigned int>(unsigned int count)
-    {
-        m_Elements.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
-        m_stride += VertexBufferLayoutElement::GetSizeOfType(GL_UNSIGNED_INT) * count;
-    }
+        void push(unsigned int count, identity<float>)
+        {
+            m_Elements.push_back({GL_FLOAT, count, GL_FALSE});
+            m_stride += VertexBufferLayoutElement::GetSizeOfType(GL_FLOAT) * count;
+        }
 
-    // template <typename T>
-    void Push<unsigned char>(unsigned int count)
-    {
-        m_Elements.push_back({GL_UNSIGNED_BYTE, count, GL_TRUE});
-        m_stride += VertexBufferLayoutElement::GetSizeOfType(GL_UNSIGNED_BYTE) * count;
-    }
+        void push(unsigned int count, identity<unsigned int>)
+        {
+            m_Elements.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
+            m_stride += VertexBufferLayoutElement::GetSizeOfType(GL_UNSIGNED_INT) * count;
+        }
 
-    inline const std::vector<VertexBufferLayoutElement> GetElements() const { return m_Elements; }
-    inline unsigned int GetStride() const { return m_stride; }
+        void push(unsigned int count, identity<unsigned char>)
+        {
+            m_Elements.push_back({GL_UNSIGNED_BYTE, count, GL_TRUE});
+            m_stride += VertexBufferLayoutElement::GetSizeOfType(GL_UNSIGNED_BYTE) * count;
+        }
+
+    public:
+        VertexBufferLayout()
+            : m_stride(0) {}
+
+        template <typename T>
+        void push(unsigned int count)
+        {
+            push(count, identity<T>());
+        }
+
+        inline const std::vector<VertexBufferLayoutElement> GetElements() const { return m_Elements; }
+        inline unsigned int GetStride() const { return m_stride; }
+    };
 };
