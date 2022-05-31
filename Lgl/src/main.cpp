@@ -73,6 +73,10 @@ int main()
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
+    // blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     float vertices[] = {
         // positions(first 3)          // colors(next 3)           // texture coords(last 2)
         0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
@@ -109,7 +113,7 @@ int main()
 
     // load and create a texture
     // -------------------------
-    std::string file = "res/wall.jpg";
+    std::string file = "res/donot.png";
     Texture2D texture1(file.c_str());
     texture1.Bind();
     // main loop
