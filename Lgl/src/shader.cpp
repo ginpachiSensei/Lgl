@@ -17,6 +17,7 @@ namespace Mirage
     }
 
     void Shader::bind(unsigned int location, float value) { glUniform1f(location, value); }
+    void Shader::bind(unsigned int location, int value) { glUniform1i(location, value); }
     void Shader::bind(unsigned int location, glm::vec4 const &value)
     {
         glUniform4f(location, value.x, value.y, value.z, value.w);

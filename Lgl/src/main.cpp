@@ -113,9 +113,16 @@ int main()
 
     // load and create a texture
     // -------------------------
-    std::string file = "res/donot.png";
-    Texture2D texture1(file.c_str());
+    std::string file1 = "res/wall.jpg";
+    std::string file2 = "res/donot.png";
+    Texture2D texture1(file2.c_str(), 1);
+    Texture2D texture2(file1.c_str());
     texture1.Bind();
+    texture2.Bind();
+
+    // binding texture to shader on slot 0 and 1
+    shader.bind("texture1", 0);
+    shader.bind("texture2", 1);
     // main loop
     while (!glfwWindowShouldClose(mWindow))
     {
