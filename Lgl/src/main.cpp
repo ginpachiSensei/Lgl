@@ -1,8 +1,6 @@
 #include "lgl.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-// #define STB_IMAGE_IMPLEMENTATION
-// #include "stb_image.h"
 #include "Texture2D.h"
 #include "Shader.h"
 #include "VertexArray.h"
@@ -79,10 +77,10 @@ int main()
 
     float vertices[] = {
         // positions(first 3)          // colors(next 3)           // texture coords(last 2)
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // top right
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // top left
     };
 
     unsigned int indices[] = {
@@ -103,7 +101,7 @@ int main()
     // vertex array object
     Mirage::VertexBufferLayout layout;
     layout.push<float>(3);
-    layout.push<float>(3);
+    // layout.push<float>(3);
     layout.push<float>(2);
     Mirage::VertexArray VAO;
     VAO.AddBuffer(VBO, layout);
@@ -123,6 +121,12 @@ int main()
     // binding texture to shader on slot 0 and 1
     shader.bind("texture1", 0);
     shader.bind("texture2", 1);
+
+    // projection matrix
+    glm::mat4 projection = glm::mat4(1.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)mWidth / (float)mHeight, 0.1f, 100.0f);
+    shader.bind("projection", projection);
+
     // main loop
     while (!glfwWindowShouldClose(mWindow))
     {
@@ -133,10 +137,16 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        shader.bind("transform", transform);
+        // model matrix
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        shader.bind("model", model);
+
+        // view matrix
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        shader.bind("view", view);
+
         // binding vertex array VAO
         VAO.Bind();
 
