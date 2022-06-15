@@ -75,6 +75,9 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // enable depth testing
+    glEnable(GL_DEPTH_TEST);
+
     // no auto format this block
     float vertices[] = {
         // vertices(first 3)  texture coordinates(next2)
@@ -172,7 +175,8 @@ int main()
         processInput(mWindow);
         // window color
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        // clear depth buffer data and color data
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // model matrix
         glm::mat4 model = glm::mat4(1.0f);
